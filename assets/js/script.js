@@ -15,14 +15,17 @@ var completeEditTask = function(taskName, taskType, taskId) {
 
     for (var i = 0; i < tasks.length; i++) {
         if (tasks[i].id === parseInt(taskId)) {
-          tasks[i].name = taskName;
-          tasks[i].type = taskType;
+            tasks[i].name = taskName;
+            tasks[i].type = taskType;
         }
 
-    alert("Task Updated!");
+        alert("Task Updated!");
 
-    formEl.removeAttribute("data-task-id");
-    document.querySelector("#save-task").textContent = "Add Task";
+        formEl.removeAttribute("data-task-id");
+        document.querySelector("#save-task").textContent = "Add Task";
+       
+    }
+    saveTasks();
 };
 
 
@@ -58,9 +61,6 @@ var taskFormHandler = function(event) {
 
     // send it as an argument to createTaskEl
     createTaskEl(taskDataObj);
-    console.log(taskDataObj);
-    console.log(taskDataObj.status);
-
     }
 }
 
@@ -86,6 +86,7 @@ var createTaskEl = function(taskDataObj) {
 
     tasks.push(taskDataObj);
     // increase task counter for next unique id
+    saveTasks();
     taskIdCounter++;
 };
 
@@ -136,7 +137,7 @@ var deleteTask = function(taskId) {
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
     taskSelected.remove();
 
-    / create new array to hold updated list of tasks
+    // create new array to hold updated list of tasks
     var updatedTaskArr = [];
 
     // loop through current tasks
@@ -147,8 +148,9 @@ var deleteTask = function(taskId) {
         }
     }
 
-// reassign tasks array to be the same as updatedTaskArr
-tasks = updatedTaskArr;
+    // reassign tasks array to be the same as updatedTaskArr
+    tasks = updatedTaskArr;
+    saveTasks();
 };
 
 
@@ -209,11 +211,16 @@ var taskStatusChangeHandler = function(event) {
     for (var i = 0; i < tasks.length; i++) {
         if (tasks[i].id === parseInt(taskId)) {
             tasks[i].status = statusValue;
-            console.log(tasks);
         }
     
-};
+    };
+    saveTasks();
+}
 
+
+var saveTasks = function() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
 // Event Listeners
 formEl.addEventListener("submit", taskFormHandler);
